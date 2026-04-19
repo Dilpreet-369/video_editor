@@ -56,21 +56,28 @@ export const trimVideo = (req, res) => {
   let command = ffmpeg(inputPath).setStartTime(startTime).setDuration(duration);
 
   // --- THE MERGE LOGIC ---
-  if (audioPath) {
-    const absoluteAudioPath = path.resolve(audioPath);
-    console.log("Merging with audio track:", absoluteAudioPath);
+// --- THE MERGE LOGIC ---
+if (audioPath) {
+  const absoluteAudioPath = path.resolve(audioPath);
+  console.log("Merging with audio track:", absoluteAudioPath);
 
-    command = command.input(absoluteAudioPath).outputOptions([
-      "-map 0:v:0", // Take video from input 0 (video file)
-      "-map 1:a:0", // Take audio from input 1 (audio file)
-      "-c:v libx264", // Re-encode video to ensure compatibility with new audio
-      "-c:a aac", // Explicitly encode the new audio to AAC
-      "-shortest", // Ensure output duration matches the trimmed video
-    ]);
-  } else {
-    // Standard trim if no audio is provided
-    command = command.videoCodec("libx264").audioCodec("aac");
-  }
+  command = command.input(absoluteAudioPath).outputOptions([
+    "-map 0:v:0", 
+    "-map 1:a:0", 
+    "-c:v libx264", 
+    "-preset ultrafast", 
+    "-crf 28",           
+    "-c:a aac", 
+    "-shortest", 
+  ]);
+} else {
+  command = command.outputOptions([
+    "-c:v libx264",
+    "-preset ultrafast",
+    "-crf 28",
+    "-c:a aac"
+  ]);
+}
 
   // Final Execution
   command
