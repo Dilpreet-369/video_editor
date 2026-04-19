@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import axios from "axios";
 import Audio_timeline from "./Audio_timeline.jsx";
 
+// const API_URL = import.meta.env.VITE_API_URL;
 const Timeline = ({ videoRef, backendPath, setVideoSource, audioPath, playheadRef }) => {
 
     const [isTrimming, setIsTrimming] = useState(false);

@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 import Timeline from "./Timeline.jsx";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const Home = () => {
     const [videoSource, setVideoSource] = useState(null);
     const [videoFile, setVideoFile] = useState(null);
@@ -39,7 +39,7 @@ const Home = () => {
 
         try {
             setIsUploading(true);
-            const response = await axios.post("http://localhost:5000/api/v1/videdit/upload", formData, {
+            const response = await axios.post(`${API_URL}/api/v1/videdit/upload`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }
             });
             const data = response.data.data;

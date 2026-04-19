@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import axios from "axios";
 import Audio_timeline from "./Audio_timeline.jsx";
-
+const API_URL = import.meta.env.VITE_API_URL;
 const Timeline = ({ videoRef, backendPath, setVideoSource, audioPath, playheadRef }) => {
 
     const [isTrimming, setIsTrimming] = useState(false);
@@ -125,7 +125,7 @@ const Timeline = ({ videoRef, backendPath, setVideoSource, audioPath, playheadRe
         const endSeconds = (endPercent / 100) * video.duration;
 
         try {
-            const response = await axios.post("http://localhost:5000/api/v1/videdit/trim", {
+            const response = await axios.post(`${API_URL}/api/v1/videdit/trim`, {
                 filePath: backendPath,
                 audioPath: audioPath, // <--- ADD THIS LINE
                 startTime: startSeconds,
@@ -134,7 +134,7 @@ const Timeline = ({ videoRef, backendPath, setVideoSource, audioPath, playheadRe
 
             setLastTrimmedFile(response.data.data.fileName);
             // 4. Update the player with the new short video// 4. Update the player
-            const newUrl = `http://localhost:5000/${response.data.data.trimmedPath}`;
+            const newUrl = `${API_URL}/${response.data.data.trimmedPath}`;
             setVideoSource(newUrl);
             // IMPORTANT: Give React a millisecond to update the DOM, then force a reload
             setTimeout(() => {
@@ -162,7 +162,7 @@ const Timeline = ({ videoRef, backendPath, setVideoSource, audioPath, playheadRe
 
         try {
             const response = await axios.post(
-                "http://localhost:5000/api/v1/videdit/export",
+                `${API_URL}/api/v1/videdit/export`,
                 { fileName: lastTrimmedFile },
                 { responseType: "blob" } // CRUCIAL: Tells axios to handle binary data
             );
